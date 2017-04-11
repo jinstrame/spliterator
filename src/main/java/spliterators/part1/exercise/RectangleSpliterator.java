@@ -9,9 +9,9 @@ public class RectangleSpliterator extends Spliterators.AbstractIntSpliterator {
 
     private final int innerLength;
     private final int[][] array;
-    private final int startOuterInclusive;
-    private final int endOuterExclusive;
-    private final int startInnerInclusive;
+    private int startOuterInclusive;
+    private int endOuterExclusive;
+    private int startInnerInclusive;
 
     public RectangleSpliterator(int[][] array) {
         this(array, 0, array.length, 0);
@@ -29,18 +29,37 @@ public class RectangleSpliterator extends Spliterators.AbstractIntSpliterator {
 
     @Override
     public OfInt trySplit() {
-        // TODO
-        throw new UnsupportedOperationException();
+        int size = startOuterInclusive - endOuterExclusive;
+        if (size < 2) return null;
+
+        int mid = startOuterInclusive + size / 2;
+
+        RectangleSpliterator ret = new RectangleSpliterator(array, startOuterInclusive, endOuterExclusive, startInnerInclusive);
+        startOuterInclusive = mid;
+        startInnerInclusive = 0;
+
+        return ret;
     }
 
     @Override
     public long estimateSize() {
-        return ((long) endOuterExclusive - startOuterInclusive)*innerLength - startInnerInclusive;
+        return ((long) endOuterExclusive - startOuterInclusive) * innerLength - startInnerInclusive;
     }
 
     @Override
     public boolean tryAdvance(IntConsumer action) {
-        // TODO
-        throw new UnsupportedOperationException();
+        if (startOuterInclusive >= endOuterExclusive)
+            return false;
+
+        if (startInnerInclusive >= innerLength) {
+            startOuterInclusive += 1;
+            startInnerInclusive = 0;
+            return tryAdvance(action);
+        }
+
+        int element = array[startOuterInclusive][startInnerInclusive];
+        startInnerInclusive += 1;
+        action.accept(element);
+        return true;
     }
 }
