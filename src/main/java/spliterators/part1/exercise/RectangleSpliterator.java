@@ -29,12 +29,12 @@ public class RectangleSpliterator extends Spliterators.AbstractIntSpliterator {
 
     @Override
     public OfInt trySplit() {
-        int size = startOuterInclusive - endOuterExclusive;
+        int size = endOuterExclusive - startOuterInclusive;
         if (size < 2) return null;
 
         int mid = startOuterInclusive + size / 2;
 
-        RectangleSpliterator ret = new RectangleSpliterator(array, startOuterInclusive, endOuterExclusive, startInnerInclusive);
+        RectangleSpliterator ret = new RectangleSpliterator(array, startOuterInclusive, mid, startInnerInclusive);
         startOuterInclusive = mid;
         startInnerInclusive = 0;
 

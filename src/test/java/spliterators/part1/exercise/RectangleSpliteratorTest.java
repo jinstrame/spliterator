@@ -38,12 +38,12 @@ public class RectangleSpliteratorTest {
 
     @Test
     public void anyMatchTest(){
-        IntStream intStream = StreamSupport.intStream(getSpliterator(), true);
-        assertThat(intStream.anyMatch(e -> e == 6), is(true));
-        assertThat(intStream.skip(5).anyMatch(e -> e == 6), is(true));
-        assertThat(intStream.skip(7).anyMatch(e -> e == 6), is(false));
-
-
+        IntStream intStream1 = StreamSupport.intStream(getSpliterator(), true);
+        IntStream intStream2 = StreamSupport.intStream(getSpliterator(), true);
+        IntStream intStream3 = StreamSupport.intStream(getSpliterator(), true);
+        assertThat(intStream1.anyMatch(e -> e == 6), is(true));
+        assertThat(intStream2.skip(5).anyMatch(e -> e == 6), is(true));
+        assertThat(intStream3.skip(7).anyMatch(e -> e == 6), is(false));
     }
 
     @Test
